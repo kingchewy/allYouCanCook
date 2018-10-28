@@ -1,0 +1,7 @@
+{
+  "name": "allYouCanCook",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

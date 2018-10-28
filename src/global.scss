@@ -1,0 +1,73 @@
+// http://ionicframework.com/docs/theming/
+@import "~@ionic/angular/css/core.css";
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@font-face{
+
+    font-family: 'Coffee Tea';
+    src: url('./assets//fonts/coffee+teademo-Regular.ttf');
+}
+
+:root {
+    --ion-color-primary: #3375c0;
+    --ion-color-secondary: #3f3f3f;
+    --ion-color-danger: #f53d3d;
+    --ion-color-light: #bebebe;
+    --ion-color-dark: #222222;
+    --ion-color-white: #ffffff;
+    --ion-color-cool: #acff9b;
+
+    --ion-color-list: #bee9da;
+    --ion-color-header: #719d9e;
+    --ion-color-content: #addfce;
+    --ion-color-card: #bee9da;
+    --ion-color-text-main: #ffffff;
+    
+    //--ion-item-background-color: #c2c2c2;
+}
+
+.page-content{
+    --ion-background-color: var(--ion-color-content);
+    --ion-text-color: var(--ion-color-text-main);
+    //background-color: map-get($colors, bg-content);
+}
+
+.page-header{
+    --ion-font-family: "Coffee Tea", "Roboto";
+    //font-size: 30px !important;
+    --ion-toolbar-background-color: var(--ion-color-header);
+    --ion-toolbar-text-color: var(--ion-color-card);
+}
+
+.btn-header{
+    color: var(--ion-color-white);
+    background: none;
+
+}
+
+.background-element{
+    --ion-background-color: var(--ion-color-list);
+}
+
+.searchbar{
+    --color: var(--ion-color-dark);
+    --background: var(--ion-color-white);
+}
+
+.title-header{
+    text-align: center;
+}
+
+.card{
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    --background: var(--ion-color-card);
+}

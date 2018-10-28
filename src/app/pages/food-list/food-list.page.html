@@ -1,0 +1,51 @@
+<ion-header >
+    <ion-toolbar class="page-header">
+      <ion-buttons slot="start">
+        <ion-menu-button color="--ion-color-cool" (click)="closeSlidingItems()"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        MEINE SPEISEN
+      </ion-title>
+      <ion-buttons slot="end">
+          <button class="btn-header" (click)="alertAddFood()">
+            <ion-icon  slot="icon-only"  ios="ios-add" md="md-add"></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content padding class="page-content">
+
+      <ion-searchbar class="searchbar" (ionInput)="searchFoods($event)" animated="true" placeholder="Suche"></ion-searchbar>
+
+        <div class="background-element">
+
+          <ion-list *ngIf="foodList?.length > 0" id="my-foodlist" #slidingList lines="inset">
+            <ion-item-sliding *ngFor="let food of foodList | orderBy: order" #slidingItem>
+              
+              <ion-item text-wrap>
+                <!-- <ion-avatar slot="start">
+                  <ion-icon name="pizza"></ion-icon>
+                </ion-avatar> -->
+                {{food.title}}
+                <ion-icon slot="end" name="arrow-dropleft" size="small" color="light"></ion-icon>
+              </ion-item>
+              
+              <ion-item-options side="end" class="sliding-enabled">
+                
+
+                <ion-item-option color="medium" (click)="alertUpdateFood(slidingItem, food)">
+                    <ion-icon size="large" name="create"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option color="danger" (click)="alertDeleteFood(slidingItem, food.id)" expandable>
+                    <ion-icon size="large" name="trash"></ion-icon>
+                  </ion-item-option>
+
+              </ion-item-options>
+            </ion-item-sliding>
+            
+          </ion-list>
+        </div>
+
+  </ion-content>
+  

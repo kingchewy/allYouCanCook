@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>food-selector</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-button (click)="closeSelector()">close</ion-button>
+  {{day.date}}
+
+  <ion-item>
+      <ion-label>Wähle Speise</ion-label>
+      <ion-select [(ngModel)]="selectedFood" placeholder="Select">
+ 
+          <ion-select-option *ngFor="let food of foodList" [value]="food">
+              {{food.title}}
+          </ion-select-option>
+      </ion-select>
+  </ion-item>
+
+  <ion-button (click)="selectedFoodButton()">log selected food</ion-button>
+  <ion-button (click)="addFood()">Add new Food</ion-button>
+  <ion-button (click)="changeFood()">Change Food</ion-button>
+</ion-content>
