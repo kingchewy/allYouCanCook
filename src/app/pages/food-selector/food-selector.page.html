@@ -1,24 +1,58 @@
+<!-- <ion-header >
+  <ion-toolbar class="page-header">
+    <ion-title class="title-header">
+      Speise für 
+    </ion-title>
+    <ion-buttons slot="end">
+        <button class="btn-header" (click)="closeSelector()">
+          <ion-icon  slot="icon-only"  name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+
 <ion-header>
-  <ion-toolbar>
-    <ion-title>food-selector</ion-title>
+  <ion-toolbar class="modal-header">
+
+    <ion-title>{{day.dayNameOfWeek}}, <small>{{day.date}}</small></ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-button (click)="closeSelector()">close</ion-button>
-  {{day.date}}
+<ion-content padding class="page-content">
 
-  <ion-item>
-      <ion-label>Wähle Speise</ion-label>
-      <ion-select [(ngModel)]="selectedFood" placeholder="Select">
+  <ion-card class="card">
+      <ion-card-header>
+          <ion-card-title>Speise auswählen</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+          <ion-select [(ngModel)]="selectedFood" placeholder="Select">
  
-          <ion-select-option *ngFor="let food of foodList" [value]="food">
-              {{food.title}}
-          </ion-select-option>
-      </ion-select>
-  </ion-item>
+              <ion-select-option *ngFor="let food of foodList" [value]="food">
+                  {{food.title}}
+              </ion-select-option>
+          </ion-select>
+      </ion-card-content>
+  </ion-card>
 
-  <ion-button (click)="selectedFoodButton()">log selected food</ion-button>
-  <ion-button (click)="addFood()">Add new Food</ion-button>
-  <ion-button (click)="changeFood()">Change Food</ion-button>
+
+  <ion-button class="btn-ok-modal" *ngIf="!foodToChange" (click)="addFood()" expand="block">ADD</ion-button>
+  <ion-button class="btn-ok-modal" *ngIf="foodToChange"  (click)="changeFood()" expand="block">Change</ion-button>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="closeSelector()">
+    <ion-fab-button color="light">
+        <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
+
+
+
+<!-- <ion-footer>
+  <ion-toolbar class="page-header">
+    <ion-buttons >
+        <button slot="" class="btn-header" (click)="closeSelector()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-footer> -->

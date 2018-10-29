@@ -109,12 +109,12 @@ export class FoodCalendarPage implements OnInit {
     //this.presentFoodSelectorModal(day);
   }
 
-  async changeFoodOfCalendarDay(day: FoodDay, foodId){
+  async changeFoodOfCalendarDay(day: FoodDay, food: Food){
     this.slidingList.closeSlidingItems();
 
     const modal = await this.modalController.create({
       component: FoodSelectorPage,
-      componentProps: { day: day,  foodId: foodId}
+      componentProps: { day: day,  food: food}
     });
     return await modal.present();
   }

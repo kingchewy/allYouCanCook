@@ -1,16 +1,16 @@
-<ion-header>
+<ion-header class="page-header">
   <ion-toolbar>
       <ion-buttons slot="start">
           <ion-back-button defaultHref="/login"></ion-back-button>
         </ion-buttons>
-    <ion-title>Neu registrieren</ion-title>
+    <ion-title class="title-header">REGISTRIEREN</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="page-content">
     <form [formGroup]="signupForm">
         <ion-item>
-          <ion-label stacked>Email</ion-label>
+          <ion-label stacked>EMAIL:</ion-label>
           <ion-input formControlName="email" type="email" placeholder="Deine Email Adresse" 
                     [class.invalid]="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
           </ion-input>
@@ -21,7 +21,7 @@
         </ion-item>
 
         <ion-item>
-          <ion-label stacked>Password</ion-label>
+          <ion-label stacked>PASSWORD</ion-label>
           <ion-input formControlName="password" type="password" placeholder="Dein Passwort" 
                     [class.invalid]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
             </ion-input>
@@ -31,8 +31,8 @@
              <ion-label>Dein Passwort muss mehr als 6 Zeichen haben.</ion-label>
           </ion-item>
 
-        <ion-button expand="block" (click)="signupUser(signupForm)" [disabled]="!signupForm.valid">
-          Erstelle einen Account
+        <ion-button color="secondary" expand="block" (click)="signupUser(signupForm)" [disabled]="!signupForm.valid">
+          Erstelle
         </ion-button>
       </form>
 </ion-content>

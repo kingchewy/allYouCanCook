@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar class="page-header">
       <ion-buttons slot="start">
-        <ion-menu-button color="light" (click)="closeSlidingItems()"></ion-menu-button>
+        <ion-menu-button class="btn-menu" (click)="closeSlidingItems()"></ion-menu-button>
       </ion-buttons>
 
       <ion-title class="title-header">
@@ -31,14 +31,15 @@
             
               
               <ion-card *ngFor="let day of weeklist | keyvalue" class="card">
-              <ion-list-header class="foodlist-header">
+              <ion-item class="foodlist-header">
                   <ion-label>
                     {{day.value.dayNameOfWeek | uppercase}}, <small>{{day.value.date}}</small>
                     <button *ngIf="day.value.foods?.length > 0" class="btn-header" (click)="addFoodToCalendarDay(day.value)">
                         <ion-icon  name="add"></ion-icon>
                       </button>
                   </ion-label>
-                </ion-list-header>
+                </ion-item>
+                
 
                 
                   <ion-item-sliding *ngFor="let food of day.value.foods" #slidingItem>
@@ -49,7 +50,7 @@
                     </ion-item>
                     
                     <ion-item-options side="end" class="sliding-enabled"> 
-                      <ion-item-option color="medium" (click)="changeFoodOfCalendarDay(day.value, food.id)">
+                      <ion-item-option color="medium" (click)="changeFoodOfCalendarDay(day.value, food)">
                           <ion-icon size="large" name="create"></ion-icon>
                         </ion-item-option>
                         <ion-item-option color="danger" (click)="alertDeleteFood(day.value, food)" expandable>

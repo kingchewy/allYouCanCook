@@ -15,6 +15,8 @@ export class FoodSelectorPage implements OnInit {
   day: FoodDay;
   foodList: Food[];
 
+  foodToChange: boolean = false;
+
   constructor(
     private navParams: NavParams,
     private modalController: ModalController,
@@ -23,6 +25,10 @@ export class FoodSelectorPage implements OnInit {
     ) { }
 
   ngOnInit() {
+    if(this.navParams.get('food')){
+      this.selectedFood = this.navParams.get('food');
+      this.foodToChange = true;
+    }
     this.day = this.navParams.get('day');
     console.log("day in modal: ",this.day);
     this.getFoodList();
@@ -54,14 +60,14 @@ export class FoodSelectorPage implements OnInit {
   }
 
   changeFood(){
-    let foodId = this.navParams.get('foodId');
+    let foodToChange = this.navParams.get('food');
 
     if(!this.selectedFood){
       return this.promptNoFoodSelected();
     }
 
     this.day.foods.forEach((food, index) =>{
-      if(food.id == foodId){
+      if(food.id == foodToChange.id){
         this.day.foods.splice(index, 1);
       }
     });

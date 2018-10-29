@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'signup', loadChildren: './pages/signup/signup.module#SignupPageModule' },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
   { path: 'reset-password', loadChildren: './pages/reset-password/reset-password.module#ResetPasswordPageModule'},
+  { path: 'splash', loadChildren: './pages/splash/splash.module#SplashPageModule' },
 
   { 
     path: 'food-list', 
@@ -34,6 +35,11 @@ const routes: Routes = [
     loadChildren: './pages/shoppinglists/shoppinglists.module#ShoppinglistsPageModule',
     canActivate: [AuthGuard],
   },
+  { 
+    path: 'shoppinglist/:id', 
+    loadChildren: './pages/shoppinglist/shoppinglist.module#ShoppinglistPageModule',
+    canActivate: [AuthGuard],
+  },
   {
     path: 'food-details/:id',
     loadChildren: './pages/food-details/food-details.module#FoodDetailsPageModule',
@@ -48,7 +54,7 @@ const routes: Routes = [
     loadChildren: './pages/profile/profile.module#ProfilePageModule',
     canActivate: [AuthGuard], 
   },
-  { path: 'splash', loadChildren: './pages/splash/splash.module#SplashPageModule' },
+
 ];
 
 @NgModule({

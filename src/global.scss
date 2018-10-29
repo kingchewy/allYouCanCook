@@ -30,7 +30,12 @@
     --ion-color-content: #addfce;
     --ion-color-card: #bee9da;
     --ion-color-text-main: #ffffff;
-    
+    --ion-color-title-header: #51fabf;
+    //--ion-color-text-slider: #8e9699;
+    --ion-color-text-slider: #858585;
+
+    --ion-color-test: #66e8ff;
+    --ion-color-test2: #93c4b9;
     //--ion-item-background-color: #c2c2c2;
 }
 
@@ -44,13 +49,16 @@
     --ion-font-family: "Coffee Tea", "Roboto";
     //font-size: 30px !important;
     --ion-toolbar-background-color: var(--ion-color-header);
-    --ion-toolbar-text-color: var(--ion-color-card);
+    --ion-toolbar-text-color: var(--ion-color-title-header);
 }
 
 .btn-header{
     color: var(--ion-color-white);
     background: none;
+}
 
+.btn-menu{
+    color: var(--ion-color-white);
 }
 
 .background-element{
@@ -64,10 +72,17 @@
 
 .title-header{
     text-align: center;
+    color: var(--ion-color-cool);
 }
 
 .card{
     margin-bottom: 20px;
     padding-bottom: 5px;
     --background: var(--ion-color-card);
+    --ion-text-color: var(--ion-color-white);
+}
+
+.modal-header{
+    color: var(--ion-color-light);
+    text-align: center;
 }
