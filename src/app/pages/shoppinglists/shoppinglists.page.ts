@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ShoppingList } from '../../models/shoppingList';
+import { ShoppinglistService } from '../../services/shoppinglist.service';
 
 @Component({
   selector: 'app-shoppinglists',
@@ -7,9 +9,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShoppinglistsPage implements OnInit {
 
-  constructor() { }
+  shoppingLists: ShoppingList[];
+
+  constructor(
+    private shoppingListService: ShoppinglistService,
+  ) { }
 
   ngOnInit() {
+    this.subscribeShoppingLists();
   }
+
+  subscribeShoppingLists(){
+
+  }
+
+  createShoppingList(){
+    
+  }
+
+  deleteShoppingList(){
+
+  }
+
+  renameShoppingList(){
+    
+  }
+
+  addItemsToShoppingList(item: string, shoppingList: ShoppingList){
+
+  }
+
 
 }

@@ -85,7 +85,8 @@ export class FoodService {
   createFood(food: Food): Promise<void> {
     //TODO
     const newFoodId = this.afFireStore.createId();
-
+    
+    
     return this.afFireStore.doc('foods/'+ newFoodId).set({      
       owner: food.owner,
       title: food.title,
@@ -98,7 +99,7 @@ export class FoodService {
   // CREATE FOOD (by title only)
   createFoodByTitle(foodTitle: string){
     const newFoodId = this.afFireStore.createId();
-
+    console.log("created food id: ", newFoodId)
     let food: Food = {
       id: null,
       title: foodTitle,
@@ -108,7 +109,8 @@ export class FoodService {
       recipie: null
     }
 
-    return this.afFireStore.doc('foods/'+ newFoodId).set({      
+    return this.afFoodsCollectionRef.doc(newFoodId).set({
+    //return this.afFireStore.doc('foods/'+ newFoodId).set({      
       owner: food.owner,
       title: food.title,
       category: food.category,
