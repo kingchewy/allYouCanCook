@@ -1,0 +1,48 @@
+ion-badge {
+    margin-right: 5px;
+    --color: var(--ion-color-white);
+    --background: #61d1d3;
+}
+
+#card-recipe{
+    position: relative;
+    --background: var(--ion-color-card-background);
+}
+
+#btn-picture-edit{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.btn-edit{
+    --color: var(--ion-color-very-light);
+}
+
+#card-header{
+    position: relative;
+}
+
+#btn-title-edit{
+    position: absolute;
+    right: 1px;
+    bottom: -8px;
+}
+
+.background-edit{
+       
+    margin: 10px;
+    margin-bottom: 30px;
+    box-shadow: 5px 10px 18px #888888;
+}
+
+.card-recipe{
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    --background: var(--ion-color-card-background);
+    --ion-text-color: var(--ion-color-card-text);
+}
+
+h2{
+    color: var(--ion-color-dark);
+}

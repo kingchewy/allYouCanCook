@@ -1,15 +1,28 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar class="page-header">
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
+        <ion-menu-button class="btn-menu"></ion-menu-button>
       </ion-buttons>
-      <ion-title>
-        Einstellungen
+      <ion-title class="title-header">
+        EINSTELLUNGEN
       </ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-content padding>
-    
+  <ion-content padding class="page-content">
+    <!-- <ion-button (click)="this.fcmService.deleteTokenButton()">Delete Token</ion-button> -->
+    <ion-list>
+      <ion-list-header>
+        <h5>
+          Erinnerungen:
+        </h5>
+      </ion-list-header>
+
+      <ion-item>
+          <ion-label>tägliche Speiseplan Erinnerungen</ion-label>
+          <ion-toggle [(ngModel)]="notifications" (ionChange)="onNotificationsChange($event)" color="secondary"></ion-toggle>
+        </ion-item>
+
+    </ion-list>
   </ion-content>
   

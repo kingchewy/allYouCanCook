@@ -1,0 +1,87 @@
+<ion-header>
+    <ion-toolbar class="modal-header">
+  
+      <ion-title>"{{shoppingList.title}}"</ion-title>
+      <small>mit einem Freund teilen</small>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content padding class="page-content">
+
+    <ion-spinner *ngIf="!friends" name="bubbles" class="center-spinner"></ion-spinner>
+
+    <!-- U S E R    H A S    F R I E N D S    A V A I L A B L E-->
+    <div *ngIf="friends?.length > 0">
+
+
+        <div id="container-select-friend">
+            <!-- SELECT FRIEND -->
+    
+            <ion-select [(ngModel)]="selectedFriend" placeholder="wähle einen Freund">
+    
+                    <ion-select-option *ngFor="let friend of friends" [value]="friend">
+                        {{friend.nickname}}
+                    </ion-select-option>
+                </ion-select>
+    
+                <!-- SELECT ROLE FOR FRIEND (READ/WRITE) -->
+                <ion-select *ngIf="selectedFriend" [(ngModel)]="selectedRole" placeholder="Berechtigung">
+        
+                        <ion-select-option [value]="roles.read">
+                            nur lesen
+                        </ion-select-option>
+                        <ion-select-option [value]="roles.write">
+                            lesen und schreiben
+                        </ion-select-option>
+                    </ion-select>
+    
+                    <ion-button [disabled]="!selectedRole" color="light" (click)="share()" shape="round" expand="full">Teilen</ion-button>
+
+        </div>
+
+        <!--  S H A R E D   I N F O R M A T I O N -->           
+        <div id="container-shared-information">
+            <!--    INFO NOT SHARED YET -->
+            <h5 *ngIf="friendsTheListIsSharedWith?.length === 0" class="center-title">
+                Derzeit wird die Einkaufsliste nicht geteilt
+            </h5>
+        
+            <!--    LIST SHARED FRIENDS -->
+            <ion-list *ngIf="friendsTheListIsSharedWith?.length > 0">
+                <ion-list-header>
+                    <ion-label>FREUNDE MIT DENEN DU DIESE LISTE TEILST:</ion-label>
+                </ion-list-header>
+                <ion-item *ngFor="let friend of friendsTheListIsSharedWith">
+                    <ion-label>{{friend.nickname}} 
+                        <small *ngIf="shoppingList.roles[friend.id] === 2">(lesen)</small>
+                        <small *ngIf="shoppingList.roles[friend.id] === 3">(schreiben)</small>
+                    </ion-label>
+                    
+                    <ion-button (click)="stopSharingWithThisFriend(friend)" slot="end"  fill="clear" ><ion-icon name="close" slot="icon-only"></ion-icon></ion-button>
+                </ion-item>
+            </ion-list>            
+        </div>
+      
+
+    </div>
+
+
+    <!-- U S E R    H A S    N O    F R I E N D S    Y E T -->
+    <div *ngIf="friends?.length == 0" class="center-title">
+        <h3>
+            Du hast noch keine Freund hinzugefügt, mit denen du Einkaufslisten teilen könntest.
+        </h3>
+    </div>
+
+
+
+
+    <!-- FAB (close Modal)-->
+    <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="closeModal()">
+      <ion-fab-button color="light">
+          <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
+  
+  

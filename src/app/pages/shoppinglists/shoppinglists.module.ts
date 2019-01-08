@@ -6,6 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ShoppinglistsPage } from './shoppinglists.page';
+import { PipesModule } from '../../pipes/pipes.module';
+import { ShareShoppinglistPage } from '../../modals/share-shoppinglist/share-shoppinglist.page';
 
 const routes: Routes = [
   {
@@ -15,12 +17,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  entryComponents: [ShareShoppinglistPage],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    PipesModule
   ],
-  declarations: [ShoppinglistsPage]
+  declarations: [ShoppinglistsPage, ShareShoppinglistPage]
 })
 export class ShoppinglistsPageModule {}

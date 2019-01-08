@@ -1,20 +1,100 @@
 <ion-header >
     <ion-toolbar class="page-header">
       <ion-buttons slot="start">
-        <ion-menu-button class="btn-menu" (click)="closeSlidingItems()"></ion-menu-button>
+        <ion-menu-button class="btn-menu"></ion-menu-button>
       </ion-buttons>
       <ion-title class="title-header">
-        EINKAUFSLISTE
+        EINKAUFSLISTEN
       </ion-title>
       <ion-buttons slot="end">
-          <button class="btn-header" (click)="alertAddFood()">
+          <button class="btn-header" (click)="alertAddShoppingList()">
             <ion-icon  slot="icon-only"  ios="ios-add" md="md-add"></ion-icon>
           </button>
         </ion-buttons>
     </ion-toolbar>
   </ion-header>
   
-  <ion-content padding class="page-content">
+  <ion-content  class="page-content">
+
+    <!-- ADD SHOPPINGITEM TO SELECTED LIST  -->
+    <div *ngIf="myShoppingLists.length > 0" id="container-add-item-to-list">
+      <ion-item-group>
+        
+        <ion-item>
+          <ion-select [(ngModel)]="selectedShoppingList" ok-text="OK" cancel-text="cancel" placeholder="Liste wählen">
+            <ion-select-option *ngFor="let list of myShoppingLists" [value]="list">{{list.title}}</ion-select-option>
+            <ion-select-option *ngFor="let list of sharedShoppingLists" [value]="list">{{list.title}} (von: {{list.owner | uidToFriendsName | async}})</ion-select-option>
+          </ion-select>
+        </ion-item>
+        
+
+        <ion-item>
+          <ion-input #shoppingItemInput clearInput placeholder="Gegenstand" (keyup.enter)="addItemToShoppingList(shoppingItemInput)"></ion-input>
+        </ion-item>
+      </ion-item-group>
+      <ion-button color="medium" expand="full" shape="round" (click)="addItemToShoppingList(shoppingItemInput)">hinzufügen</ion-button>
+    </div>
     
+    
+
+    <!-- SHOPPINGLISTS OVERVIEW ( OWN )-->
+    <div id="container-shoppinglist-items">
+
+      <ion-list *ngIf="myShoppingLists.length > 0" #slidingList>
+          <ion-item-divider>
+              <ion-label>
+                MEINE EINKAUFSLISTEN:
+              </ion-label>
+            </ion-item-divider>
+
+        <ion-item-sliding *ngFor="let list of myShoppingLists | ownerOfShoppinglist:userId">
+          
+          <ion-item [href]="'/shoppinglist/' + list.id" text-wrap>
+            <ion-label>{{list.title}}</ion-label>
+            <ion-icon slot="end" name="arrow-dropleft" size="small" color="light"></ion-icon>
+          </ion-item>
+
+          <ion-item-options side="start">
+            <ion-item-option color="primary" (click)="shareShoppingListWithFriendModal(list)">Share</ion-item-option>
+          </ion-item-options>
+          
+          <ion-item-options side="end">
+            <ion-item-option color="medium" (click)="alertRenameShoppingList(list)">
+                <ion-icon size="large" name="create"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger" (click)="alertDeleteShoppingList(list)" expandable>
+                <ion-icon size="large" name="trash"></ion-icon>
+              </ion-item-option>
+          </ion-item-options>
+
+        </ion-item-sliding>
+        
+        <!-- SHOPPINGLISTS SHARED BY OTHERS-->          
+        <div id="shared-shoppingList" *ngIf="sharedShoppingLists.length > 0">
+          <ion-item-divider >
+              <ion-label>
+                GETEILTE EINKAUFSLISTEN:
+              </ion-label>
+            </ion-item-divider>
+          <ion-item id="shared-list-item" [href]="'/shoppinglist/' + list.id" text-wrap *ngFor="let list of sharedShoppingLists">
+            <ion-label>
+              {{ list.title }}
+            </ion-label>
+            <ion-label color="light">
+              <h3>
+                von: {{ list.owner | uidToFriendsName | async }}
+              </h3>
+            </ion-label>
+            <p slot="end" color="medium">{{roles[list.roles[userId]]}}</p>
+          </ion-item>
+        </div>
+
+      </ion-list>
+    </div>    
+
+    <ion-spinner *ngIf="!myShoppingLists || !sharedShoppingLists" name="bubbles" class="center-spinner"></ion-spinner>
+
+
+  
   </ion-content>
   

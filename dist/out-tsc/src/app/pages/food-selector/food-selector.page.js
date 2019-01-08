@@ -10,10 +10,69 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var angular_1 = require("@ionic/angular");
+var food_service_1 = require("../../services/food.service");
+var food_calendar_service_1 = require("../../services/food-calendar.service");
 var FoodSelectorPage = /** @class */ (function () {
-    function FoodSelectorPage() {
+    function FoodSelectorPage(navParams, modalController, foodservice, foodcalendarservice) {
+        this.navParams = navParams;
+        this.modalController = modalController;
+        this.foodservice = foodservice;
+        this.foodcalendarservice = foodcalendarservice;
+        this.foodToChange = false;
     }
     FoodSelectorPage.prototype.ngOnInit = function () {
+        if (this.navParams.get('food')) {
+            this.selectedFood = this.navParams.get('food');
+            this.foodToChange = true;
+        }
+        this.day = this.navParams.get('day');
+        console.log("day in modal: ", this.day);
+        this.getFoodList();
+    };
+    FoodSelectorPage.prototype.getFoodList = function () {
+        this.foodList = this.foodservice.getLatestFoodList();
+    };
+    FoodSelectorPage.prototype.closeSelector = function () {
+        this.modalController.dismiss();
+    };
+    FoodSelectorPage.prototype.addFood = function () {
+        if (this.day.foods == null) {
+            this.day.foods = [this.selectedFood];
+            console.log("food added on empty Array in day: ", this.day);
+        }
+        else {
+            this.day.foods.push(this.selectedFood);
+            console.log("foodDay after adding Food to existing array: ", this.day);
+        }
+        this.requestAddFoodToCalendar();
+        this.modalController.dismiss();
+    };
+    FoodSelectorPage.prototype.changeFood = function () {
+        var _this = this;
+        var foodToChange = this.navParams.get('food');
+        this.day.foods.forEach(function (food, index) {
+            if (food.id == foodToChange.id) {
+                _this.day.foods.splice(index, 1);
+            }
+        });
+        this.day.foods.push(this.selectedFood);
+        this.requestAddFoodToCalendar();
+        this.modalController.dismiss();
+    };
+    FoodSelectorPage.prototype.requestAddFoodToCalendar = function () {
+        this.foodcalendarservice.addFoodToCalendar(this.day)
+            .then(function (result) {
+            console.log("success adding food to firestore: ", result);
+        }).catch(function (error) {
+            console.log("error. something went wrong adding the food. Error: ", error);
+        });
+    };
+    FoodSelectorPage.prototype.selectedFoodButton = function () {
+        console.log("selected Food: ", this.selectedFood);
+    };
+    FoodSelectorPage.prototype.promptNoFoodSelected = function () {
+        console.log("no food selected!");
     };
     FoodSelectorPage = __decorate([
         core_1.Component({
@@ -21,7 +80,10 @@ var FoodSelectorPage = /** @class */ (function () {
             templateUrl: './food-selector.page.html',
             styleUrls: ['./food-selector.page.scss'],
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [angular_1.NavParams,
+            angular_1.ModalController,
+            food_service_1.FoodService,
+            food_calendar_service_1.FoodCalendarService])
     ], FoodSelectorPage);
     return FoodSelectorPage;
 }());

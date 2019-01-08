@@ -19,31 +19,41 @@ var firestore_1 = require("@angular/fire/firestore");
 var storage_1 = require("@angular/fire/storage");
 var auth_1 = require("@angular/fire/auth");
 var environment_1 = require("../environments/environment");
-var auth_service_1 = require("./services/user/auth.service");
-var auth_guard_1 = require("./services/user/auth.guard");
-var food_service_1 = require("./services/food.service");
+var messaging_1 = require("@angular/fire/messaging");
+var functions_1 = require("@angular/fire/functions");
+var ngx_3 = require("@ionic-native/firebase/ngx");
+var ngx_4 = require("@ionic-native/camera/ngx");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            declarations: [app_component_1.AppComponent],
+            declarations: [
+                app_component_1.AppComponent,
+            ],
             entryComponents: [],
             imports: [
                 platform_browser_1.BrowserModule,
                 angular_1.IonicModule.forRoot(),
                 app_routing_module_1.AppRoutingModule,
-                fire_1.AngularFireModule.initializeApp(environment_1.environment.firebase, 'allYouCanCook'),
-                firestore_1.AngularFirestoreModule,
+                messaging_1.AngularFireMessagingModule,
+                functions_1.AngularFireFunctionsModule,
+                fire_1.AngularFireModule.initializeApp(environment_1.environment.firebase),
+                firestore_1.AngularFirestoreModule.enablePersistence(),
                 auth_1.AngularFireAuthModule,
                 storage_1.AngularFireStorageModule // imports firebase/storage only needed for storage features
             ],
+            exports: [],
             providers: [
                 ngx_2.StatusBar,
                 ngx_1.SplashScreen,
-                auth_service_1.AuthService,
-                auth_guard_1.AuthGuard,
-                food_service_1.FoodService,
+                ngx_3.Firebase,
+                ngx_4.Camera,
+                //ProfileService,
+                //AuthService,
+                //AuthGuard,
+                //FoodService,
+                //FoodCalendarService,
                 { provide: router_1.RouteReuseStrategy, useClass: angular_1.IonicRouteStrategy }
             ],
             bootstrap: [app_component_1.AppComponent]

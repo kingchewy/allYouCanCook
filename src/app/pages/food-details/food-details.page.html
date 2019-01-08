@@ -1,9 +1,145 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>food-details</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar class="page-header">
+      <ion-buttons slot="start">
+        <ion-back-button (click)="goBack()"></ion-back-button>
+      </ion-buttons>
+      <ion-title class="title-header">SPEISE-DETAILS</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content padding>
 
+<ion-content padding class="page-content">
+    <ion-card id="card-recipe">
+
+        <!-- I M A G E  -->
+        <!-- no image yet-->
+        <ion-item *ngIf="!foodImagePath">
+          <ion-label class="placeholder-on-empty">Bild hinzufügen</ion-label>
+          <ion-button (click)="takePicture()" slot="end" color="light">
+            <ion-icon slot="icon-only" name="camera"></ion-icon>
+          </ion-button>
+        </ion-item>
+        
+        <!-- image present -->
+        <ion-button *ngIf="foodImagePath" id="btn-picture-edit" (click)="takePicture()" fill="clear" color="light" slot="end">
+            <ion-icon slot="icon-only" name="camera"></ion-icon>
+          </ion-button>
+        <div>
+          <ion-img *ngIf="foodImagePath" src="{{foodImagePath}}"></ion-img>
+        </div>
+
+        <!-- T I T L E  -->
+        <!-- default / non-edit -->
+        <ion-card-header *ngIf="!showEditTitleSubtitle" id="card-header">
+            <ion-card-title>{{food?.title}}</ion-card-title>
+            <ion-card-subtitle>{{food?.description}}</ion-card-subtitle>
+            <ion-button id="btn-title-edit" fill="clear" class="btn-edit" (click)="editTitleSubtitle()">
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-button>
+        </ion-card-header>
+
+        <!-- edit -->
+        <ion-list *ngIf="showEditTitleSubtitle">
+          <ion-item>
+              <ion-input [(ngModel)]="titleToEdit" placeholder="Titel der Speise"></ion-input>
+            </ion-item>
+          <ion-item>
+              <ion-input [(ngModel)]="subtitleToEdit" placeholder="Kurzbeschreibung der Speise"></ion-input>
+          </ion-item>
+          <ion-button fill="clear" color="primary" slot="end" (click)="saveTitleSubtitle()">
+              <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+          <ion-button fill="clear" color="danger" slot="end" (click)="cancelEditingTitleSubtitle()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+
+        </ion-list>
+
+        
+        <ion-card-content>
+          <!-- C A T E G O R I E S -->
+          <ion-item>
+              <ion-label>
+                  <ion-text>
+                    <h3 *ngIf="!food?.category?.length" class="placeholder-on-empty">Kategorien auswählen: </h3>
+                  </ion-text>
+                </ion-label>
+            <ion-badge *ngFor="let category of food?.category">{{category}}</ion-badge>
+    
+            <ion-button fill="clear" class="btn-edit" slot="end" (click)="presentChooseCategories()">
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-button>  
+          </ion-item>
+
+
+            <!-- C O N D I M E N T S  -->
+            <!-- default / non-edit -->
+          <ion-item *ngIf="!showEditCondiments">               
+              <ion-label>
+                <ion-text>
+                  <h2 *ngIf="food?.recipe?.condiments?.length > 0">Zutaten:</h2>
+                  <h3 *ngIf="!food?.recipe?.condiments?.length" class="placeholder-on-empty">Zutaten hinzufügen</h3>
+                </ion-text>
+                <p *ngFor="let condiment of food?.recipe?.condiments">{{condiment}}</p>
+              </ion-label>
+              <ion-button fill="clear" class="btn-edit" slot="end" (click)="editCondiments()">
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-button>
+            </ion-item>
+
+            <!-- edit -->
+            <div class="background-edit" *ngIf="showEditCondiments">
+                <ion-list>
+                  <ion-list-header>Zutaten bearbeiten/hinzufügen:
+                    
+                    <ion-button fill="clear" color="light" (click)="addCondiment()">
+                      <ion-icon slot="icon-only" name="add"></ion-icon>
+                    </ion-button>
+                  </ion-list-header>
+                  <ion-item *ngFor="let condiment of condimentsToEdit; let i = index; trackBy: trackByFn">
+                    <ion-input [(ngModel)]="condimentsToEdit[i]"></ion-input>
+                  </ion-item>
+
+                </ion-list>
+                <ion-button [disabled]="condimentsToEdit.length < 1" fill="clear" color="primary" slot="end" (click)="saveCondiments()">
+                    <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+                  </ion-button>
+                <ion-button fill="clear" color="danger" slot="end" (click)="cancelEditingCondiments()">
+                    <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+              </div>
+
+            <!-- R E C E P I E  -->
+            <ion-item *ngIf="!showEditPreparation">               
+                <ion-label>
+                  <ion-text>
+                    <h2 *ngIf="food?.recipe?.preparation">Zubereitung:</h2>
+                    <h3 *ngIf="!food?.recipe?.preparation" class="placeholder-on-empty">Zubereitung hinzufügen:</h3>
+                  </ion-text>
+                  <p text-wrap>{{food?.recipe?.preparation}}</p>                    
+                </ion-label>
+                
+                <ion-button fill="clear" class="btn-edit" slot="end" (click)="editPreparation()">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-button>
+              </ion-item>
+
+              <div *ngIf="showEditPreparation">
+                <ion-label>
+                  <ion-text>
+                    <h2>Zubereitung:</h2>
+                  </ion-text>
+                </ion-label>
+                <!-- <textarea #myTextarea id="myTextarea" rows="1" (keyup)="resizeTextarea()" [(ngModel)]="editRecipe"></textarea> -->
+                <ion-textarea rows="10" [(ngModel)]="preparationToEdit" placeholder="beschreibe hier die Zubereitung"></ion-textarea>
+                <ion-button [disabled]="preparationToEdit == '' || !preparationToEdit" fill="clear" color="primary" slot="end" (click)="savePreparation()">
+                    <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+                  </ion-button>
+                <ion-button fill="clear" color="danger" slot="end" (click)="cancelEditingPreparation()">
+                    <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+              </div>
+
+            </ion-card-content>
+          </ion-card>
 </ion-content>

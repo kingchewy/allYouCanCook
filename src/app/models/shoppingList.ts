@@ -1,7 +1,8 @@
-export interface ShoppingList  {
-    id: string, 
-    title: string,
-    itemsUnchecked: string[],
-    itemsChecked: string[],
-    roles: any[]
+export class ShoppingList  {
+    id: string;
+    owner: string;
+    title: string;
+    itemsUnchecked: string[];
+    itemsChecked: string[];
+    roles: any[];
 }

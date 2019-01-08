@@ -1,9 +1,65 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-header >
+    <ion-toolbar class="page-header">
+      <ion-buttons slot="start">
+        <ion-menu-button class="btn-menu"></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="title-header">
+        Benutzer-Profil
+      </ion-title>
+      <ion-buttons slot="end">
+        <button *ngIf="!editUserData" class="btn-header" (click)="editProfile()">
+          <ion-icon  slot="icon-only"  name="create"></ion-icon>
+        </button>
+        <button *ngIf="editUserData" class="btn-header" (click)="updateProfile()">
+          SAVE
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content  class="page-content">
 
-<ion-content padding>
+    <ion-spinner *ngIf="!user && !userImagePath" name="bubbles" class="center-spinner"></ion-spinner>
+    
+    <!-- ********* P R O F I L E - P I C T U R E **********  -->
+    <div id="profile-photo-container" *ngIf="user && userImagePath != null">
+      <div id="btn-camera">
+        <ion-button (click)="takePicture()" size="small" fill="clear" color="medium">
+          <ion-icon slot="icon-only" name="camera"></ion-icon>
+        </ion-button>
+      </div>
 
-</ion-content>
+      <!-- N O    P R O F I L E - P I C   (PLACEHOLDER-PIC) -->
+      <ion-thumbnail *ngIf="!userImagePath">
+        <img src="../assets/images/no-photo.png">
+      </ion-thumbnail>
+
+      <!-- P R O F I L E - P I C   A V A I L A B L E -->
+      <ion-thumbnail *ngIf="userImagePath">
+        <img src="{{userImagePath}}">
+      </ion-thumbnail>
+    </div>
+    
+    <ion-list *ngIf="user && (userImagePath != null)">
+
+      <ion-item>
+        <ion-label>Anzeigename: </ion-label>
+        <ion-input [disabled]="!editUserData" slot="end" placeholder="<leer>" [(ngModel)]="user.nickname"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Vorname: </ion-label>
+        <ion-input [disabled]="!editUserData" slot="end" placeholder="<leer>" [(ngModel)]="user.firstname"></ion-input>
+        </ion-item>
+
+      <ion-item>
+        <ion-label>Nachname: </ion-label>
+        <ion-input [disabled]="!editUserData" slot="end" placeholder="<leer>" [(ngModel)]="user.lastname"></ion-input>
+        </ion-item>
+
+      <ion-item>
+        <ion-label>Geburtsdatum: </ion-label>
+        <ion-datetime [disabled]="!editUserData" display-format="DD.MMMM, YYYY"  [(ngModel)]="user.birthdate"></ion-datetime>
+        </ion-item>
+    </ion-list>
+  </ion-content>

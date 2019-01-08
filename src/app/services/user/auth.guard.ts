@@ -4,15 +4,29 @@ import { Observable } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
+import { AuthService } from './auth.service';
+
+/**
+ * A U T H E N T I C A T I O N   -    G U A R D
+ *
+ * Description:
+ * Firebase "onAuthStateChanged" is used to check for the user login-state in the app,
+ * to protect all routes after login/signup/password-reset.
+ * 
+ * Emits the returned userId to the "AuthService"
+ * 
+ */
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  public userId;
-  constructor(private router: Router){
-    console.log("2. Guard")
+  
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ){
   }
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -20,7 +34,8 @@ export class AuthGuard implements CanActivate {
       return new Promise((resolve, reject) => {
         firebase.auth().onAuthStateChanged((user: firebase.User) => {
           if (user) {
-            this.userId = user.uid;
+            this.authService.setUserId(user.uid);
+            this.authService.setEmail(user.email);
             console.log("AuthGUARD: User logged in! Able to access further components! \n UID = ",user.uid)
             resolve(true);
           } else {

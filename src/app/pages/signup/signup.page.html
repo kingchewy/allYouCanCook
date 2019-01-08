@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content padding class="page-content">
-    <form [formGroup]="signupForm">
+    <form [formGroup]="signupForm" id="signup-form">
         <ion-item>
-          <ion-label stacked>EMAIL:</ion-label>
+          <ion-label position="stacked">eMail:</ion-label>
           <ion-input formControlName="email" type="email" placeholder="Deine Email Adresse" 
                     [class.invalid]="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
           </ion-input>
@@ -21,7 +21,7 @@
         </ion-item>
 
         <ion-item>
-          <ion-label stacked>PASSWORD</ion-label>
+          <ion-label position="stacked">Passwort:</ion-label>
           <ion-input formControlName="password" type="password" placeholder="Dein Passwort" 
                     [class.invalid]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
             </ion-input>
@@ -31,8 +31,52 @@
              <ion-label>Dein Passwort muss mehr als 6 Zeichen haben.</ion-label>
           </ion-item>
 
-        <ion-button color="secondary" expand="block" (click)="signupUser(signupForm)" [disabled]="!signupForm.valid">
-          Erstelle
+        <ion-item>
+          <ion-label position="stacked">Vorname:</ion-label>
+          <ion-input formControlName="firstname" type="text" placeholder="Dein Vorname" 
+                    [class.invalid]="!signupForm.controls['firstname'].valid && signupForm.controls['firstname'].touched">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!signupForm.controls['firstname'].valid && signupForm.controls['firstname'].touched">
+          <ion-label>Bitte einen gültigen Vornamen eingeben.</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Nachname:</ion-label>
+          <ion-input formControlName="lastname" type="text" placeholder="Dein Nachname" 
+                    [class.invalid]="!signupForm.controls['lastname'].valid && signupForm.controls['lastname'].touched">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!signupForm.controls['lastname'].valid && signupForm.controls['lastname'].touched">
+          <ion-label>Bitte einen gültigen Nachnamen eingeben.</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Anzeigename:</ion-label>
+          <ion-input formControlName="nickname" type="text" placeholder="Dein Anzeigename in der App" 
+                    [class.invalid]="!signupForm.controls['nickname'].valid && signupForm.controls['nickname'].touched">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!signupForm.controls['nickname'].valid && signupForm.controls['nickname'].touched">
+          <ion-label>Bitte einen gültigen Anzeigename eingeben.</ion-label>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Geburtsdatum:</ion-label>
+          <ion-datetime (ionChange)="showDate($event)" formControlName="birthdate" type="text" display-format="DDDD MMM D, YYYY" picker-format="DD MMMM YYYY" placeholder="wähle dein Geburtsdatum"
+                    [class.invalid]="!signupForm.controls['birthdate'].valid && signupForm.controls['birthdate'].touched"
+          ></ion-datetime>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!signupForm.controls['birthdate'].valid && signupForm.controls['birthdate'].touched">
+          <ion-label>wähle dein Geburtsdatum.</ion-label>
+        </ion-item>
+
+        <ion-button color="secondary" expand="block" (click)="signupUser(signupForm)" shape="round" [disabled]="!signupForm.valid">
+          abschicken
         </ion-button>
       </form>
 </ion-content>

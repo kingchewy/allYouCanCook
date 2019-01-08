@@ -1,64 +1,11 @@
-/* page-food-planner {
 
-} */
-/* 
-
-#day-block{
-    //border: 1px solid #BFBFBF;
-    //background-color: white;
-    
-
-    //padding-bottom: 10px;
-    margin-bottom: 30px;
-    height: 55px;
+ion-label{
+    color: var(--ion-color-card-title);
 }
 
-#weekday{
-    font-size: 15px;
-    padding-left: 5px;
-    text-decoration: underline;
-    color: map-get($colors, header-list-text);
-    margin-bottom: 5px;
-    
+ion-card-subtitle{
+    color: var(--ion-color-card-title);
 }
-
-.my-sliding-items{
-    height: 40px;
-    //box-shadow: 2px 4px 2px #525151;
-    // box-shadow: 1px 1px 1px 1px #525151d8;
-    //border-radius: 6px; 
-    
-    //border-radius: $searchbar-md-input-border-radius;
-    box-shadow: $searchbar-md-input-box-shadow;
-    
-
-}
-
-.day-item{
-    height: 35px;
-    color: rgb(66, 66, 66);
-}
-
-#week-navbar{
-    text-align: center;
-}
-
-.whitespace-pre{
-    white-space: pre;
-    text-align: center;
-    margin: 0px;
-    padding: 0px;
-}
-
-#changeLater{
-    border: 2px;
-    border-color: black;
-    background-color: white;
-
-    padding: 5px;
-    border-radius: $searchbar-md-input-border-radius;
-    box-shadow: $searchbar-md-input-box-shadow;
-} */
 
 .foodlist-header{
     margin-bottom: 5px;
@@ -69,5 +16,8 @@
 }
 
 #add-button{
+    color:  var(--ion-color-btn-add);
+    margin-left: 10px;
     font-size: 20px;
 }
+

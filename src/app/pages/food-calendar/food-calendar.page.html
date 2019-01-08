@@ -9,7 +9,7 @@
       </ion-title>
 
 
-      <ion-buttons slot="end">
+      <ion-buttons fill="clear" slot="end">
         <button class="btn-header" (click)="getPreviousWeekList()">
             <ion-icon slot="icon-only" name="ios-arrow-back"></ion-icon>
           </button>
@@ -27,68 +27,46 @@
       <div id="changeLater">
 
 
-          <ion-list  id="my-foodlist" #slidingList lines="inset">
-            
-              
+          <ion-list #slidingList lines="inset">
+
               <ion-card *ngFor="let day of weeklist | keyvalue" class="card">
-              <ion-item class="foodlist-header">
-                  <ion-label>
-                    {{day.value.dayNameOfWeek | uppercase}}, <small>{{day.value.date}}</small>
-                    <button *ngIf="day.value.foods?.length > 0" class="btn-header" (click)="addFoodToCalendarDay(day.value)">
+                  <ion-item class="card-header">
+                    <ion-icon name="calendar" slot="start"></ion-icon>
+                    <ion-label>{{day.value.dayNameOfWeek | uppercase}}</ion-label>
+                    <ion-button *ngIf="day.value.foods?.length > 0" class="btn-add" fill="clear"  (click)="addFoodToCalendarDay(day.value)">
                         <ion-icon  name="add"></ion-icon>
-                      </button>
-                  </ion-label>
-                </ion-item>
-                
-
-                
-                  <ion-item-sliding *ngFor="let food of day.value.foods" #slidingItem>
-                    
-                    <ion-item text-wrap>
-                      {{food.title}}
-                      <ion-icon slot="end" name="arrow-dropleft" size="small" color="light"></ion-icon>
-                    </ion-item>
-                    
-                    <ion-item-options side="end" class="sliding-enabled"> 
-                      <ion-item-option color="medium" (click)="changeFoodOfCalendarDay(day.value, food)">
-                          <ion-icon size="large" name="create"></ion-icon>
-                        </ion-item-option>
-                        <ion-item-option color="danger" (click)="alertDeleteFood(day.value, food)" expandable>
-                          <ion-icon size="large" name="trash"></ion-icon>
-                        </ion-item-option>  
-                    </ion-item-options>
-
-                  </ion-item-sliding>
-
-           <ion-item *ngIf="day.value.foods?.length < 1">
-              <button  class="btn-header" (click)="addFoodToCalendarDay(day.value)">
-                <ion-icon id="add-button" name="add"></ion-icon>
-              </button>
-          </ion-item>
-        </ion-card>
-
-        <ion-item-group > 
-            </ion-item-group>
-           
-              
-            </ion-list>
+                      </ion-button>
+                      <small>{{day.value.date}}</small>
+                  </ion-item>
+          
+                  <ion-card-content>
+                      <ion-item-sliding *ngFor="let food of day.value.foods" #slidingItem>
+                  
+                          <ion-item lines="none" text-wrap>
+                            {{food.title}}
+                            <ion-icon slot="end" name="arrow-dropleft" size="small" color="light"></ion-icon>
+                          </ion-item>
+                          
+                            <ion-item-options side="end" class="sliding-enabled"> 
+                              <ion-item-option color="medium" (click)="changeFoodOfCalendarDay(day.value, food)">
+                                  <ion-icon size="large" name="create"></ion-icon>
+                                </ion-item-option>
+                                <ion-item-option color="danger" (click)="alertDeleteFood(day.value, food)" expandable>
+                                  <ion-icon size="large" name="trash"></ion-icon>
+                                </ion-item-option>  
+                            </ion-item-options>
+        
+                        </ion-item-sliding>
+        
+                        <ion-item *ngIf="day.value.foods?.length < 1">
+                            <button  class="btn-add" (click)="addFoodToCalendarDay(day.value)">
+                              <ion-icon id="add-button" name="add"></ion-icon>
+                            </button>
+                        </ion-item>
+                  </ion-card-content>
+                </ion-card>
+          </ion-list>
       
         </div>
 
   </ion-content>
-
-  
-  
-  <ion-footer>
-    <ion-toolbar class="page-header">
-      <ion-buttons >
-          <button class="btn-header" (click)="previousWeek()">
-              <ion-icon slot="icon-only" name="ios-arrow-back"></ion-icon>
-            </button>
-  
-          <button class="btn-header" (click)="nextWeek()">
-            <ion-icon slot="icon-only" name="ios-arrow-forward"></ion-icon>
-          </button>
-        </ion-buttons>
-      </ion-toolbar>
-  </ion-footer>

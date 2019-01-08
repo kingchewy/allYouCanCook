@@ -1,0 +1,21 @@
+ion-list{
+    margin-top: 5px;
+    margin-bottom: 35px;
+    //background: var(--ion-color-white);
+}
+
+ion-item-group{
+    margin-bottom: 20px;
+}
+
+#friendlist ion-item{
+    --background: #f0f0f0;
+}
+
+#friendrequest-list ion-item{
+    --background: var(--ion-color-light);
+}
+
+ion-list-header{
+    color: var(--ion-color-light);
+}

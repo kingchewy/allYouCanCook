@@ -18,15 +18,10 @@
 
       <ion-searchbar class="searchbar" (ionInput)="searchFoods($event)" animated="true" placeholder="Suche"></ion-searchbar>
 
-        <div class="background-element">
-
           <ion-list *ngIf="foodList?.length > 0" id="my-foodlist" #slidingList lines="inset">
             <ion-item-sliding *ngFor="let food of foodList | orderBy: order" #slidingItem>
               
-              <ion-item text-wrap>
-                <!-- <ion-avatar slot="start">
-                  <ion-icon name="pizza"></ion-icon>
-                </ion-avatar> -->
+              <ion-item [href]="'fooddetails/' + food.id" text-wrap>
                 {{food.title}}
                 <ion-icon slot="end" name="arrow-dropleft" size="small" color="light"></ion-icon>
               </ion-item>
@@ -45,7 +40,6 @@
             </ion-item-sliding>
             
           </ion-list>
-        </div>
 
   </ion-content>
   

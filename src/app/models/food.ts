@@ -1,11 +1,11 @@
-import { Category } from "./category";
-import { Recipie } from "./recipie";
+import { Recipe } from "./recipe";
 
 export class Food{
     id?: string;
     title: string;
+    description?: string;
     owner: string;
-    subscriber?: String[];
-    category?: Category[];
-    recipie?: Recipie
+    subscriber?: string[];
+    category?: string[];
+    recipe?: Recipe;
 }

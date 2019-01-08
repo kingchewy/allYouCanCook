@@ -49,12 +49,14 @@ var auth_service_1 = require("../../services/user/auth.service");
 var angular_1 = require("@ionic/angular");
 var forms_1 = require("@angular/forms");
 var router_1 = require("@angular/router");
+var date_time_service_1 = require("../../services/date-time.service");
 var SignupPage = /** @class */ (function () {
-    function SignupPage(authService, loadingCtrl, alertCtrl, formBuilder, router) {
+    function SignupPage(authService, loadingCtrl, alertCtrl, formBuilder, dateTimeService, router) {
         this.authService = authService;
         this.loadingCtrl = loadingCtrl;
         this.alertCtrl = alertCtrl;
         this.formBuilder = formBuilder;
+        this.dateTimeService = dateTimeService;
         this.router = router;
         this.signupForm = this.formBuilder.group({
             email: [
@@ -65,13 +67,33 @@ var SignupPage = /** @class */ (function () {
                 '',
                 forms_1.Validators.compose([forms_1.Validators.minLength(6), forms_1.Validators.required]),
             ],
+            firstname: [
+                '',
+                forms_1.Validators.compose([forms_1.Validators.required]),
+            ],
+            lastname: [
+                '',
+                forms_1.Validators.compose([forms_1.Validators.required]),
+            ],
+            nickname: [
+                '',
+                forms_1.Validators.compose([forms_1.Validators.required]),
+            ],
+            birthdate: [
+                '',
+                forms_1.Validators.compose([forms_1.Validators.required]),
+            ],
         });
     }
     SignupPage.prototype.ngOnInit = function () {
     };
+    SignupPage.prototype.showDate = function (ev) {
+        console.log("birthdate-format from picker", ev.target.value);
+        console.log("new Date (now) to isoString via moment: ", this.dateTimeService.getCurrentDate());
+    };
     SignupPage.prototype.signupUser = function (signupForm) {
         return __awaiter(this, void 0, void 0, function () {
-            var email, password, _a;
+            var newUser, password, _a;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -80,9 +102,19 @@ var SignupPage = /** @class */ (function () {
                         console.log('Need to complete the form, current value: ', signupForm.value);
                         return [3 /*break*/, 4];
                     case 1:
-                        email = signupForm.value.email;
+                        newUser = {
+                            email: signupForm.value.email,
+                            firstname: signupForm.value.firstname,
+                            lastname: signupForm.value.lastname,
+                            nickname: signupForm.value.nickname,
+                            birthdate: signupForm.value.birthdate,
+                            friends: [],
+                            token: null,
+                            createdAt: this.dateTimeService.getCurrentDate()
+                        };
+                        console.log("birthdate-format from picker", signupForm.value.birthdate);
                         password = signupForm.value.password;
-                        this.authService.signupUser(email, password).then(function () {
+                        this.authService.signupUser(newUser, password).then(function () {
                             _this.loading.dismiss().then(function () {
                                 _this.router.navigateByUrl('food-list');
                             });
@@ -128,6 +160,7 @@ var SignupPage = /** @class */ (function () {
             angular_1.LoadingController,
             angular_1.AlertController,
             forms_1.FormBuilder,
+            date_time_service_1.DateTimeService,
             router_1.Router])
     ], SignupPage);
     return SignupPage;

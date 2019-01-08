@@ -1,59 +1,44 @@
 <ion-header class="page-header">
   <ion-toolbar>
-    <ion-title class="title-header">All You Can Eat</ion-title>
+    <ion-title class="title-header">All You Can Cook</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding class="page-content">
 
-
-<!--   <h1 *ngIf="authService.user | async">Welcome {{ (authService.user | async)?.email }}!</h1>
-
-  <div *ngIf="!(authService.user | async)">
-    <input type="text" [(ngModel)]="email" placeholder="email">
-    <input type="password" [(ngModel)]="password" placeholder="password">
-
-    <button (click)="signup()" [disabled]="!email || !password">
-      Signup
-    </button>
-
-    <button (click)="login()" [disabled]="!email || !password">
-      Login
-    </button>
+  <div id="login-form">
+    <form [formGroup]="loginForm">
+          <ion-item>
+              <ion-label stacked>eMail:</ion-label>
+              <ion-input formControlName="email" type="email" placeholder="Deine Email Adresse" [class.invalid]="!loginForm.controls['email'].valid && loginForm.controls['email'].touched">
+              </ion-input>
+          </ion-item>
+          <ion-item class="error-message" *ngIf="!loginForm.controls['email'].valid && loginForm.controls['email'].touched">
+              <ion-label>Bitte eine gültige Email Adresse eingeben.</ion-label>
+          </ion-item>
+          <ion-item>
+              <ion-label stacked>Passwort:</ion-label>
+              <ion-input formControlName="password" type="password" placeholder="Dein Passwort" [class.invalid]="!loginForm.controls['password'].valid&& loginForm.controls['password'].touched">
+              </ion-input>
+          </ion-item>
+          <ion-item class="error-message" *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched">
+              <ion-label>Dein Passwort muss mehr als 6 Zeichen haben.</ion-label>
+          </ion-item>
+          <ion-button color="secondary" (click)="loginUser(loginForm)" expand="block" shape="round" [disabled]="!loginForm.valid">
+            LOGIN
+          </ion-button>
+        </form>
+        
   </div>
 
-  <button (click)="logout()" *ngIf="authService.user | async">
-    Logout
-  </button> -->
-  
-  <form [formGroup]="loginForm">
-        <ion-item>
-            <ion-label stacked>Email</ion-label>
-            <ion-input formControlName="email" type="email" placeholder="Deine Email Adresse" [class.invalid]="!loginForm.controls['email'].valid && loginForm.controls['email'].touched">
-            </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!loginForm.controls['email'].valid && loginForm.controls['email'].touched">
-            <ion-label>Bitte eine gültige Email Adresse eingeben.</ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-label stacked>Password</ion-label>
-            <ion-input formControlName="password" type="password" placeholder="Dein Passwort" [class.invalid]="!loginForm.controls['password'].valid&& loginForm.controls['password'].touched">
-            </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched">
-            <ion-label>Dein Passwort muss mehr als 6 Zeichen haben.</ion-label>
-        </ion-item>
-        <ion-button color="secondary" (click)="loginUser(loginForm)" expand="block" [disabled]="!loginForm.valid">
-          LOGIN
-        </ion-button>
-    </form>
-
-      <ion-button color="dark" expand="block" fill="clear" routerLink="/signup">
-        Einen neuen Account erstellen
-      </ion-button>
-      <ion-button color="dark" expand="block" fill="clear" routerLink="/reset-password">
-       Passwort vergessen? :(
-      </ion-button>
+  <div id="login-options">
+    <ion-button color="medium" expand="block" fill="clear" routerLink="/signup">
+      Einen neuen Account erstellen
+    </ion-button>
+    <ion-button color="medium" expand="block" fill="clear" routerLink="/reset-password">
+     Passwort vergessen?
+    </ion-button>
+  </div>
   
   
 </ion-content>

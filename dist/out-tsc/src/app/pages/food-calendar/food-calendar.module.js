@@ -12,6 +12,7 @@ var forms_1 = require("@angular/forms");
 var router_1 = require("@angular/router");
 var angular_1 = require("@ionic/angular");
 var food_calendar_page_1 = require("./food-calendar.page");
+var food_selector_page_1 = require("../food-selector/food-selector.page");
 var routes = [
     {
         path: '',
@@ -23,13 +24,14 @@ var FoodCalendarPageModule = /** @class */ (function () {
     }
     FoodCalendarPageModule = __decorate([
         core_1.NgModule({
+            entryComponents: [food_calendar_page_1.FoodCalendarPage, food_selector_page_1.FoodSelectorPage],
             imports: [
                 common_1.CommonModule,
                 forms_1.FormsModule,
                 angular_1.IonicModule,
                 router_1.RouterModule.forChild(routes)
             ],
-            declarations: [food_calendar_page_1.FoodCalendarPage]
+            declarations: [food_calendar_page_1.FoodCalendarPage, food_selector_page_1.FoodSelectorPage]
         })
     ], FoodCalendarPageModule);
     return FoodCalendarPageModule;

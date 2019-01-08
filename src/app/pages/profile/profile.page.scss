@@ -1,0 +1,24 @@
+ion-datetime{
+    --padding-end: 60px;
+}
+
+#profile-photo-container{
+    margin-top:10px;
+    margin-bottom: 20px;
+}
+
+ion-thumbnail{
+    margin:auto;
+    --size: 100px;
+}
+
+#btn-camera{
+    text-align: center;
+}
+
+ion-fab{
+    position: relative;
+    bottom: 10px;
+    left: 10px;
+}
+

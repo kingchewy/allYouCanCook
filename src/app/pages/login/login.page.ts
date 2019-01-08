@@ -8,6 +8,16 @@ import { LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from '../../services/user/auth.service';
 import { Router } from '@angular/router';
 
+/**
+ * L O G I N   -    P A G E
+ * 
+ * Description:
+ * Classic Login Page with email and password for authentication
+ * A FormGroup is used to do some validation on required fields and min length
+ * 
+ * 
+ */
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -16,7 +26,6 @@ import { Router } from '@angular/router';
 export class LoginPage implements OnInit {
   email: string;
   password: string;
-
 
   public loginForm: FormGroup;
   public loading: HTMLIonLoadingElement;
@@ -68,20 +77,6 @@ export class LoginPage implements OnInit {
       await this.loading.present();
     }
   }
-
- /*  signup() {
-    this.authService.signup(this.email, this.password);
-    this.email = this.password = '';
-  }
-
-  login() {
-    this.authService.login(this.email, this.password);
-    this.email = this.password = '';    
-  }
-
-  logout() {
-    this.authService.logout();
-  } */
 }
 
 

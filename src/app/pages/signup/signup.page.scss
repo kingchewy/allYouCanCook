@@ -12,10 +12,12 @@ p {
     
 ion-label {
     margin-left: 5px;
+    color: #5c5c5c;
 }
 
 ion-input {
     padding: 5px;
+    color: #5c5c5c8a;
 }
 
 .invalid {
@@ -32,4 +34,9 @@ ion-input {
     .item-inner {
         border-bottom: 0 !important;
     }
+}
+
+#signup-form{
+    margin:auto;
+    max-width: 90% !important;
 }

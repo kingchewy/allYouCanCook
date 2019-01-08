@@ -1,0 +1,29 @@
+
+<ion-header>
+  <ion-toolbar class="modal-header">
+
+    <ion-title>{{foodDay.dayNameOfWeek}}, <small>{{foodDay.date}}</small></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="page-content">
+    
+  <div id="container-select-food">
+    <ion-select [(ngModel)]="selectedFood" placeholder="Speise wählen">
+
+        <ion-select-option *ngFor="let food of foodList$ | async" [value]="food">
+            {{food.title}}
+        </ion-select-option>
+    </ion-select>
+    
+    <ion-button [disabled]="!selectedFood" color="light" *ngIf="!foodToChange" (click)="addFood()" expand="block" shape="round">HINZUFÜGEN</ion-button>
+    <ion-button [disabled]="!selectedFood" color="light" *ngIf="foodToChange"  (click)="changeFood()" expand="block" shape="round">ÄNDERN</ion-button>
+  </div>
+
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="closeSelector()">
+    <ion-fab-button color="light">
+        <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

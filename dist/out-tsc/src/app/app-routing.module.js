@@ -15,6 +15,7 @@ var routes = [
     { path: 'signup', loadChildren: './pages/signup/signup.module#SignupPageModule' },
     { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
     { path: 'reset-password', loadChildren: './pages/reset-password/reset-password.module#ResetPasswordPageModule' },
+    { path: 'splash', loadChildren: './pages/splash/splash.module#SplashPageModule' },
     {
         path: 'food-list',
         loadChildren: './pages/food-list/food-list.module#FoodListPageModule',
@@ -41,7 +42,12 @@ var routes = [
         canActivate: [auth_guard_1.AuthGuard],
     },
     {
-        path: 'food-details/:id',
+        path: 'shoppinglist/:id',
+        loadChildren: './pages/shoppinglist/shoppinglist.module#ShoppinglistPageModule',
+        canActivate: [auth_guard_1.AuthGuard],
+    },
+    {
+        path: 'fooddetails/:id',
         loadChildren: './pages/food-details/food-details.module#FoodDetailsPageModule',
         canActivate: [auth_guard_1.AuthGuard],
     },
@@ -54,7 +60,6 @@ var routes = [
         loadChildren: './pages/profile/profile.module#ProfilePageModule',
         canActivate: [auth_guard_1.AuthGuard],
     },
-    { path: 'splash', loadChildren: './pages/splash/splash.module#SplashPageModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {

@@ -1,0 +1,95 @@
+<ion-header >
+  <ion-toolbar class="page-header">
+    <ion-buttons slot="start">
+      <ion-menu-button class="btn-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-header">
+      FREUNDE
+    </ion-title>
+    <ion-buttons slot="end">
+        <button class="btn-header" (click)="alertAddNewFriend()">
+          <ion-icon  slot="icon-only"  ios="ios-add" md="md-add"></ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content  class="page-content">
+
+    <ion-spinner *ngIf="!friends && !pendingRequests" name="bubbles" class="center-spinner"></ion-spinner>
+
+  
+  <!--  F R I E N D S L I S T-->
+  <ion-list id="friendlist" *ngIf="friends">
+    <ion-list-header>
+      <h6>MEINE FREUNDE:</h6>
+    </ion-list-header>
+    <ion-item *ngFor="let friend of friends">
+        <ion-avatar slot="start">
+          <img src="../assets/images/no-photo.png">
+        </ion-avatar>
+        <ion-label>
+          {{friend.nickname}}
+        </ion-label>
+      </ion-item>
+      <h6 *ngIf="friends.length == 0" class="center-title">*** Du hast noch keine Freunde ***</h6>
+  </ion-list>
+
+  <ion-list id="friendrequest-list" *ngIf="pendingRequests?.length > 0 || sentUnansweredRequests?.length > 0">
+    <ion-list-header>
+      <h6>
+        FREUNDSCHAFTSANFRAGEN:
+      </h6>
+    </ion-list-header>
+    
+      <!--  R E C E I V E D / U N A N S W E R E D   R E Q U E S T  -->
+      <ion-item-group *ngIf="pendingRequests?.length > 0">
+        <ion-item-divider >
+          <ion-label>
+              offen:
+          </ion-label>
+        </ion-item-divider>
+        
+          <ion-item *ngFor="let request of pendingRequests">
+            
+            <ion-label>
+              <h2><small>von: </small>"{{request.fromUserName}}"</h2>
+              <h6><small>Datum: </small>"{{request.dateOfRequest}}"</h6>
+              <p><small>Nachricht: </small>"{{request.message}}"</p>
+            </ion-label>
+            <ion-button (click)="acceptFriendRequest(request)" slot="end" fill="clear">
+                <ion-icon slot="icon-only" name="thumbs-up" color="primary"></ion-icon>
+            </ion-button>
+            <ion-button (click)="denyFriendRequest(request)" slot="end" fill="clear">
+              <ion-icon slot="icon-only" name="thumbs-down" color="secondary"></ion-icon>
+            </ion-button>
+          </ion-item>
+      </ion-item-group>
+
+        <!-- S E N T / U N A N S W E R E D    R E Q U E S T S -->
+        <ion-item-group *ngIf="sentUnansweredRequests?.length > 0">
+          <ion-item-divider >
+              <ion-label>
+                  unbeantwortet:
+              </ion-label>
+            </ion-item-divider>
+                
+            <ion-item *ngFor="let request of sentUnansweredRequests">
+              
+              <ion-label>
+                <h2><small>gesendet an: </small>"{{request.toUserEmail}}"</h2>
+                <h3><small>Datum: </small>"{{request.dateOfRequest}}"</h3>
+                <p><small>Deine Nachricht: </small>"{{request.message}}"</p>
+              </ion-label>
+              <ion-button (click)="cancelFriendRequest(request)" slot="end" color="secondary" fill="clear">
+                  <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+              </ion-button>
+            </ion-item>
+        </ion-item-group>
+
+
+
+  </ion-list>
+
+
+</ion-content>

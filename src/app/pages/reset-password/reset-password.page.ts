@@ -4,6 +4,16 @@ import { AlertController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+/**
+ * R E S E T   P A S S W O R D   -    P A G E
+ * 
+ * Description:
+ * reset password by calling the authService resetpassword method with
+ * provided email from template. the service calls firestore to send
+ * a email link to the user, where he will be able to reset his password
+ * 
+ */
+
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.page.html',

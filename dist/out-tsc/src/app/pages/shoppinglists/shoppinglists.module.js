@@ -12,6 +12,7 @@ var forms_1 = require("@angular/forms");
 var router_1 = require("@angular/router");
 var angular_1 = require("@ionic/angular");
 var shoppinglists_page_1 = require("./shoppinglists.page");
+var pipes_module_1 = require("../../pipes/pipes.module");
 var routes = [
     {
         path: '',
@@ -27,7 +28,8 @@ var ShoppinglistsPageModule = /** @class */ (function () {
                 common_1.CommonModule,
                 forms_1.FormsModule,
                 angular_1.IonicModule,
-                router_1.RouterModule.forChild(routes)
+                router_1.RouterModule.forChild(routes),
+                pipes_module_1.PipesModule
             ],
             declarations: [shoppinglists_page_1.ShoppinglistsPage]
         })

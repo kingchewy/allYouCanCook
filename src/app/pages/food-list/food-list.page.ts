@@ -1,11 +1,19 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 
-import { Observable, Subscription,  } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { FoodService } from '../../services/food.service';
-import { Router } from '@angular/router';
 import { LoadingController, AlertController, ToastController, ItemSliding, List } from '@ionic/angular';
 import { Food } from '../../models/food';
 
+/**
+ * F O O D L I S T    -    P A G E
+ * 
+ * Description:
+ * Subscribes to users FoodList to show the list in the template
+ * CRUD methods for Food
+ * 
+ * Food search function
+ */
 
 @Component({
   selector: 'app-food-list',
@@ -28,37 +36,34 @@ export class FoodListPage implements OnInit, OnDestroy {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
-    ){
-      
+    ){     
    }
    
   ngOnInit() {
-    console.log("onInit");
     this.getFoods();
   }
 
   
   /*  *******************    F O O D S E R V I C E    M E T H O D S    ******************** */
 
-  async getFoods(){
+  private async getFoods():Promise<void>{
     const loading =  await this.loadingCtrl.create();
     await loading.present();
 
-    this.getFoodsSub = this.foodService.foodList.subscribe(list =>{      
+    this.getFoodsSub = this.foodService.foodList$.subscribe(list =>{      
       this.foodList = list;
       loading.dismiss();
-      console.log("food-subscription! => ", list)
     })
   }
   
   
   // ADD FOOD via FOODSERVICE
-  async addFoodByTitle(foodTitle){
+  private async addFoodByTitle(foodTitle):Promise<void>{
     const loading = await this.loadingCtrl.create();
     await loading.present();
     
     if (this.isFoodTwice(foodTitle) == false) {
-      this.foodService.createFoodByTitle(foodTitle)
+      this.foodService.createFoodByTitleOnly(foodTitle)
       .then(function(data){
         console.log("Food successfully updated! => ", data);
         loading.dismiss();
@@ -75,26 +80,8 @@ export class FoodListPage implements OnInit, OnDestroy {
 
   }
 
-
-  // UPDATE FOOD via FOODSERVICE
-  async updateFoodTitle(food, newFoodTitle){
-    const loading = await this.loadingCtrl.create();
-    
-    this.foodService.updateFood(food, newFoodTitle)
-    .then(function(data){
-      console.log("Food successfully updated! => ", data);
-      loading.dismiss();
-    })
-    .catch(function(error){
-      console.log("Error updating food => ",error);
-      loading.dismiss();
-    });
-    
-    await loading.present();
-  }
-
   // DELETE FOOD via FOODSERVICE
-  async deleteFood(foodId: string){
+  private async deleteFood(foodId: string):Promise<void>{
     const loading = await this.loadingCtrl.create();
     
     this.foodService.deleteFood(foodId)
@@ -111,9 +98,9 @@ export class FoodListPage implements OnInit, OnDestroy {
 
 
   /*  ********************    A L E R T S    ********************* */
-  // ADD new FOOD
-  async alertAddFood() {
-    this.slidingList.closeSlidingItems();
+  // ADD new FOOD (called from tempalte)
+  private async alertAddFood():Promise<void> {
+    this.closeSlidingItems();
     
     let alert = await this.alertCtrl.create({
       header: 'Neue Speise hinzufügen',
@@ -142,8 +129,9 @@ export class FoodListPage implements OnInit, OnDestroy {
     await alert.present();
   }
   
-  // UPDATE FOOD
-  async alertUpdateFood(slidingItem: ItemSliding, food) {
+  // UPDATE FOOD (called from template)
+  private async alertUpdateFood(slidingItem: ItemSliding, food):Promise<void> {
+    //this.closeSlidingItems();
     let prompt = await this.alertCtrl.create({
       header: 'Bearbeite Name',
       inputs: [{
@@ -160,8 +148,12 @@ export class FoodListPage implements OnInit, OnDestroy {
         {
           text: 'Speichern',
           handler: foodToUpdate => {
-            slidingItem.close();       
-            this.updateFoodTitle(food, foodToUpdate.title);
+            food.title = foodToUpdate.title
+            this.foodService.updateFoodName(food).then(() => {
+              console.log("updated successfully")
+            })
+            //this.updateFoodTitle(food, foodToUpdate.title);
+            slidingItem.close();    
           }
         }
       ]
@@ -170,8 +162,8 @@ export class FoodListPage implements OnInit, OnDestroy {
   }
 
       
-  // DELETE FOOD
-  async alertDeleteFood(slidingItem: ItemSliding, food) {
+  // DELETE FOOD (called from template)
+  private async alertDeleteFood(slidingItem: ItemSliding, food):Promise<void> {
     let alert = await this.alertCtrl.create({
       header: 'Lösche Speise',
       message: 'Willst du wirklich die Speise permanent aus deiner Liste entfernen?',
@@ -200,24 +192,30 @@ export class FoodListPage implements OnInit, OnDestroy {
   /*  ********************    M E T H O D S     ********************* */
   
   // SEARCH - FUNCTION
-  searchFoods(ev: any){
+  private searchFoods(ev: any):void{
+    this.closeSlidingItems();
     this.foodList = this.foodService.getLatestFoodList();
     // set val to the value of the searchbar
-    let val = ev.target.value;
+    let searchValue = ev.target.value;
         
     // if the value is an empty string don't filter the items
     if(this.foodList){
-      if (val && val.trim() !== '') {
-        this.foodList = this.foodList.filter(function (food) {
-          console.log(food);
-          return food.title.toLowerCase().includes(val.toLowerCase());
-        });
+      if (this.searchValueNotEmpty(searchValue)) {
+        console.log("true -> in function")
+        this.foodList = this.foodList.filter( food => {
+          return food.title.toLowerCase().includes(searchValue.toLowerCase());
+        })
       }
     }
   }
+
+  // HELPER: checks if value is not empty
+  private searchValueNotEmpty(value: string):boolean{
+    return value && (value.trim() !== '')
+  }
   
   // ADD FOOD HANDLER Method, to check if Food to Add is already in DB
-  isFoodTwice(foodTitle: string) {
+  private isFoodTwice(foodTitle: string):boolean {
     let isTwice = false;
     
     this.foodList.forEach(element => {
@@ -229,7 +227,7 @@ export class FoodListPage implements OnInit, OnDestroy {
   }
   
   // ADD FOOD HANDLER Method, to let User know that Food is already in List
-  async presentToastItemTwice() {
+  private async presentToastItemTwice():Promise<void> {
     let toast = await this.toastCtrl.create({
       message: 'Speise bereits in deiner Liste vorhanden!',
       duration: 2000,
@@ -238,20 +236,22 @@ export class FoodListPage implements OnInit, OnDestroy {
     await toast.present();
   }
 
-
   // TEMP METHODS TO FIX BROKEN SLIDING ITEM BUG
   ionViewWillLeave(){
-    console.log("view leave")
-    this.slidingList.closeSlidingItems().then(function(){
-      console.log("successfully closed sliding items.")
-    }).catch(function(error){
-      console.log("Error while closing slidingItems:")
-    });
+    if(this.slidingList){
+      this.slidingList.closeSlidingItems().then(function(){
+        console.log("successfully closed sliding items.")
+      }).catch(function(error){
+        console.log("Error while closing slidingItems:")
+      });
+    }
   }
   
   // TEMP METHOD TO FIX BROKEN SLIDING ITEM BUG
   closeSlidingItems(){
-    this.slidingList.closeSlidingItems();
+    if(this.slidingList){
+      this.slidingList.closeSlidingItems();
+    }
   }
 
   ngOnDestroy(): void {

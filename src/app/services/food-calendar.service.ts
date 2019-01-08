@@ -3,10 +3,18 @@ import { DateTimeService } from './date-time.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FoodDay } from '../models/foodDay';
 import * as firebase from 'firebase/app';
-import { AuthGuard } from './user/auth.guard';
 import { Food } from '../models/food';
 import { FoodService } from './food.service';
+import { AuthService } from './user/auth.service';
 
+/**
+ * F O O D C A L E N D A R   -   S E R V I C E
+ *
+ * Description:
+ * provides a FoodCalendar and possibility to add/remove Foods from firestore
+ * provides an observable weeklist refreshing with DateTimeServices's "momentToView$"
+ * 
+ */
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +28,12 @@ export class FoodCalendarService {
   private _foodCalendar: BehaviorSubject<FoodDay[]> = new BehaviorSubject([]);
 
   // app components can subscribe for users complete foodCalendar
-  public readonly foodCalendar: Observable<FoodDay[]> = this._foodCalendar.asObservable();
+  public readonly foodCalendar$: Observable<FoodDay[]> = this._foodCalendar.asObservable();
 
   // currently requested/selected weeklist to view
   private _weekListToView: BehaviorSubject<FoodDay[]> = new BehaviorSubject([]);
   // app components can subscribe for up to date weekList (foodCalendar for selected week)
-  public readonly weekListToView: Observable<FoodDay[]> = this._weekListToView.asObservable();
+  public readonly weekListToView$: Observable<FoodDay[]> = this._weekListToView.asObservable();
   
 
   //SUBSCRIPTIONS
@@ -35,44 +43,44 @@ export class FoodCalendarService {
   constructor(
     private dateTimeService: DateTimeService,
     private foodservice: FoodService,
-    private authguard: AuthGuard,
+    private authService: AuthService,
 
   ) {
     let firestore = firebase.firestore();
     let settings = {timestampsInSnapshots: true};
     firestore.settings(settings);
 
-    this.afFoodCalendarColRef = firebase.firestore().collection('foodCalendars/' + this.authguard.userId + '/foodCalendar');
-    this.loadInitialFoodCalendar();
-    //this.createWeekListToView();    
+    this.afFoodCalendarColRef = firebase.firestore().collection('foodCalendars/' + this.authService.getUserId() + '/foodCalendar');
+    this.loadInitialFoodCalendar();  
    }
 
 
   loadInitialFoodCalendar(){
     let that = this;
     
-    this.afFoodCalendarColRef.onSnapshot(function(days){
+    this.afFoodCalendarColRef.onSnapshot({ includeMetadataChanges: false }, foodDays => {
 
       let fireFoodCalendar: any[] = [];
     
-      days.forEach(day =>  {
-        let daysData = day.data();
+      foodDays.forEach( foodDay =>  {
+        let foodDayData = foodDay.data();
         
-        let dateOfDay = that.dateTimeService.formatDateForView(day.id);
-        let daysNameOfWeek = that.dateTimeService.getDayNameOfDate(day.id);
-        let foodsOfDay: Food[] = that.getFoodsById(daysData.lunch);
+        let dateOfDay = that.dateTimeService.formatDateForView(foodDay.id);
+        let daysNameOfWeek = that.dateTimeService.getDayNameOfDate(foodDay.id);
+        let foodsOfDay: Food[] = that.getFoodsById(foodDayData.lunch);
 
         let foodDayObject: FoodDay = {
           date: dateOfDay,
           dayNameOfWeek: daysNameOfWeek,
           foods: foodsOfDay
         };
-        fireFoodCalendar[day.id] = foodDayObject;
-        //fireFoodCalendar.push(foodDayObject);
-        console.log("filling day by day => ", fireFoodCalendar, " + days ID = ",day.id.toString())
+        fireFoodCalendar[foodDay.id] = foodDayObject;
+        
       });
       that._foodCalendar.next(fireFoodCalendar);
-      //that._weekListToView.next(fireFoodCalendar);
+
+/*       var source = foodDays.metadata.fromCache ? "local cache" : "server";
+      console.log("CacheInfo: ",foodDays.metadata.fromCache + "\nData came from " + source); */
       that.createWeekListToView();
     });
   }
@@ -81,7 +89,7 @@ export class FoodCalendarService {
   // on every change of the MOMENT, the new foodCalendarWeekList 
   // will be created according to the new MOMENT
   createWeekListToView(){
-    this.momentForWeekListSub = this.dateTimeService.momentToView
+    this.momentForWeekListSub = this.dateTimeService.momentToView$
     .subscribe(newMoment => {
       if(newMoment){
         //get latest complete FoodCalendar from behaviours
@@ -111,15 +119,19 @@ export class FoodCalendarService {
     })
   }
 
-  getFoodsById(listOfFoodsForLunch): Food[]{
-    if(!listOfFoodsForLunch){
+
+  // TAKES: a map of key/value pairs <string, string> as Argument:
+  // key == foodId / value == foodName
+
+  // RETURNS: an array of "Food" Object by given keys(foodId)
+  private getFoodsById(mapOfFoods: Map<string,string>): Food[]{
+    if(!mapOfFoods){
       return null;
     }
 
-    let listOfFoods: Food[] = [];
-    
-    listOfFoodsForLunch.forEach(element => {
-      let foodId: string = Object.keys(element).toString();      
+    const listOfFoods: Food[] = [];
+    mapOfFoods.forEach( foodMap => {
+      let foodId: string = Object.keys(foodMap).toString();      
 
       this.foodservice.getLatestFoodList().forEach(food =>{
         if(food.id === foodId){
@@ -130,6 +142,8 @@ export class FoodCalendarService {
     return listOfFoods
   }
 
+
+  // FIRESTORE
   // ADD new doc or merge into existing
   addFoodToCalendar(foodDayObject: FoodDay): Promise<any>{
     let doc = {
@@ -151,6 +165,8 @@ export class FoodCalendarService {
     return this.afFoodCalendarColRef.doc(date).set(doc, {merge: true})
   }
 
+  // FIRESTORE
+  // Delete Food from calendar
   deleteFoodFromCalendar(foodDayObject: FoodDay, foodToRemove: Food): Promise<any>{
     let doc = {
       lunch: []

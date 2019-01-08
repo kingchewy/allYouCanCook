@@ -13,9 +13,12 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var firebase = require("firebase/app");
 require("firebase/auth");
+var auth_service_1 = require("./auth.service");
 var AuthGuard = /** @class */ (function () {
-    function AuthGuard(router) {
+    //public userId;
+    function AuthGuard(router, authService) {
         this.router = router;
+        this.authService = authService;
         console.log("2. Guard");
     }
     AuthGuard.prototype.canActivate = function (next, state) {
@@ -23,7 +26,8 @@ var AuthGuard = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
-                    _this.userId = user.uid;
+                    //this.userId = user.uid;
+                    _this.authService.setUserId(user.uid);
                     console.log("AuthGUARD: User logged in! Able to access further components! \n UID = ", user.uid);
                     resolve(true);
                 }
@@ -39,7 +43,8 @@ var AuthGuard = /** @class */ (function () {
         core_1.Injectable({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [router_1.Router])
+        __metadata("design:paramtypes", [router_1.Router,
+            auth_service_1.AuthService])
     ], AuthGuard);
     return AuthGuard;
 }());

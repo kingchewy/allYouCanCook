@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { FoodCalendarPage } from './food-calendar.page';
-import { FoodSelectorPage } from '../food-selector/food-selector.page';
+import { FoodSelectorPage } from '../../modals/food-selector/food-selector.page';
 
 const routes: Routes = [
   {

@@ -46,15 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var food_service_1 = require("../../services/food.service");
+var router_1 = require("@angular/router");
 var angular_1 = require("@ionic/angular");
-var auth_guard_1 = require("../../services/user/auth.guard");
 var FoodListPage = /** @class */ (function () {
-    function FoodListPage(foodService, authguard, loadingCtrl, alertCtrl, toastCtrl) {
+    function FoodListPage(foodService, loadingCtrl, alertCtrl, toastCtrl, router) {
         this.foodService = foodService;
-        this.authguard = authguard;
         this.loadingCtrl = loadingCtrl;
         this.alertCtrl = alertCtrl;
         this.toastCtrl = toastCtrl;
+        this.router = router;
         this.order = 'title'; // OrderPipe Attribute in HTML (by title)
     }
     FoodListPage.prototype.ngOnInit = function () {
@@ -71,35 +71,33 @@ var FoodListPage = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.loadingCtrl.create()];
                     case 1:
                         loading = _a.sent();
-                        this.getFoodsSub = this.foodService.foodList.subscribe(function (list) {
+                        return [4 /*yield*/, loading.present()];
+                    case 2:
+                        _a.sent();
+                        this.getFoodsSub = this.foodService.foodList$.subscribe(function (list) {
                             _this.foodList = list;
                             loading.dismiss();
+                            console.log("food-subscription! => ", list);
                         });
-                        return [4 /*yield*/, loading.present()];
-                    case 2: return [2 /*return*/, _a.sent()];
+                        return [2 /*return*/];
                 }
             });
         });
     };
     // ADD FOOD via FOODSERVICE
-    FoodListPage.prototype.addFoodByTitle = function (food) {
+    FoodListPage.prototype.addFoodByTitle = function (foodTitle) {
         return __awaiter(this, void 0, void 0, function () {
-            var loading, newFood;
+            var loading;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.loadingCtrl.create()];
                     case 1:
                         loading = _a.sent();
-                        if (this.isFoodTwice(food) == false) {
-                            newFood = {
-                                id: null,
-                                title: food.title,
-                                owner: this.authguard.userId,
-                                subscriber: null,
-                                category: null,
-                                recipie: null
-                            };
-                            this.foodService.createFood(newFood)
+                        return [4 /*yield*/, loading.present()];
+                    case 2:
+                        _a.sent();
+                        if (this.isFoodTwice(foodTitle) == false) {
+                            this.foodService.createFoodByTitleOnly(foodTitle)
                                 .then(function (data) {
                                 console.log("Food successfully updated! => ", data);
                                 loading.dismiss();
@@ -111,44 +109,32 @@ var FoodListPage = /** @class */ (function () {
                         }
                         else {
                             console.log("ist schon in der liste");
+                            loading.dismiss();
                             this.presentToastItemTwice();
                         }
-                        return [4 /*yield*/, loading.present()];
-                    case 2:
-                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    // UPDATE FOOD via FOODSERVICE
-    FoodListPage.prototype.updateFoodTitle = function (food, newFoodTitle) {
-        return __awaiter(this, void 0, void 0, function () {
-            var loading;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.loadingCtrl.create()];
-                    case 1:
-                        loading = _a.sent();
-                        this.foodService.updateFood(food, newFoodTitle)
-                            .then(function (data) {
-                            console.log("Food successfully updated! => ", data);
-                            loading.dismiss();
-                        })
-                            .catch(function (error) {
-                            console.log("Error updating food => ", error);
-                            loading.dismiss();
-                        });
-                        return [4 /*yield*/, loading.present()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+    // UPDATE FOOD via FOODSERVICE (currently replaced in alert handler)
+    /*   async updateFoodTitle(food, newFoodTitle){
+        
+        const loading = await this.loadingCtrl.create();
+        await loading.present();
+    
+        this.foodService.updateFoodName(food, newFoodTitle)
+        .then(function(data){
+          console.log("Food successfully updated! => ", data);
+          loading.dismiss();
+        })
+        .catch(function(error){
+          console.log("Error updating food => ",error);
+          loading.dismiss();
         });
-    };
+      } */
     // DELETE FOOD via FOODSERVICE
-    FoodListPage.prototype.deleteFood = function (food) {
+    FoodListPage.prototype.deleteFood = function (foodId) {
         return __awaiter(this, void 0, void 0, function () {
             var loading;
             return __generator(this, function (_a) {
@@ -156,7 +142,7 @@ var FoodListPage = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.loadingCtrl.create()];
                     case 1:
                         loading = _a.sent();
-                        this.foodService.deleteFood(food)
+                        this.foodService.deleteFood(foodId)
                             .then(function () {
                             console.log("Food successfully deleted!");
                             loading.dismiss();
@@ -181,7 +167,7 @@ var FoodListPage = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.slidingList.closeSlidingItems();
+                        this.closeSlidingItems();
                         return [4 /*yield*/, this.alertCtrl.create({
                                 header: 'Neue Speise hinzufügen',
                                 //message: 'Wie soll der Titel deiner neuen Speise lauten?',
@@ -201,7 +187,7 @@ var FoodListPage = /** @class */ (function () {
                                     {
                                         text: 'OK',
                                         handler: function (food) {
-                                            _this.addFoodByTitle(food);
+                                            _this.addFoodByTitle(food.title);
                                         }
                                     }
                                 ]
@@ -239,8 +225,12 @@ var FoodListPage = /** @class */ (function () {
                                 {
                                     text: 'Speichern',
                                     handler: function (foodToUpdate) {
+                                        food.title = foodToUpdate.title;
+                                        _this.foodService.updateFoodName(food).then(function () {
+                                            console.log("updated successfully");
+                                        });
+                                        //this.updateFoodTitle(food, foodToUpdate.title);
                                         slidingItem.close();
-                                        _this.updateFoodTitle(food, foodToUpdate.title);
                                     }
                                 }
                             ]
@@ -295,57 +285,32 @@ var FoodListPage = /** @class */ (function () {
     /*  ********************    M E T H O D S     ********************* */
     // SEARCH - FUNCTION
     FoodListPage.prototype.searchFoods = function (ev) {
-        var _this = this;
-        if (this.foodList.length > 0) {
-            this.slidingList.closeSlidingItems();
-        }
-        this.foodService.getMyFoodList().onSnapshot(function (snapshot) {
-            _this.foodList = [];
-            snapshot.forEach(function (doc) {
-                var docData = doc.data();
-                var food = {
-                    id: doc.id,
-                    title: docData.title,
-                    owner: docData.owner,
-                    subscriber: docData.subscriber,
-                    category: docData.category,
-                    recipie: docData.recipie
-                };
-                _this.foodList.push(food);
-                console.log("getFoods methode. pushed Food = ", food);
-                // set val to the value of the searchbar
-                var val = ev.target.value;
-                // if the value is an empty string don't filter the items
-                if (_this.foodList) {
-                    if (val && val.trim() !== '') {
-                        _this.foodList = _this.foodList.filter(function (food) {
-                            console.log(food);
-                            return food.title.toLowerCase().includes(val.toLowerCase());
-                        });
-                    }
-                }
-            });
-        });
-    };
-    FoodListPage.prototype.searchFoods2 = function (ev) {
+        this.closeSlidingItems();
         this.foodList = this.foodService.getLatestFoodList();
         // set val to the value of the searchbar
-        var val = ev.target.value;
+        var searchValue = ev.target.value;
         // if the value is an empty string don't filter the items
         if (this.foodList) {
-            if (val && val.trim() !== '') {
+            if (this.searchValueNotEmpty(searchValue)) {
+                console.log("true -> in function");
                 this.foodList = this.foodList.filter(function (food) {
-                    console.log(food);
-                    return food.title.toLowerCase().includes(val.toLowerCase());
+                    return food.title.toLowerCase().includes(searchValue.toLowerCase());
                 });
+                /* this.foodList = this.foodList.filter(function (food) {
+                  console.log(food);
+                  return food.title.toLowerCase().includes(searchValue.toLowerCase());
+                }); */
             }
         }
     };
+    FoodListPage.prototype.searchValueNotEmpty = function (value) {
+        return value && (value.trim() !== '');
+    };
     // ADD FOOD HANDLER Method, to check if Food to Add is already in DB
-    FoodListPage.prototype.isFoodTwice = function (food) {
+    FoodListPage.prototype.isFoodTwice = function (foodTitle) {
         var isTwice = false;
         this.foodList.forEach(function (element) {
-            if (element.title == food.title) {
+            if (element.title == foodTitle) {
                 isTwice = true;
             }
         });
@@ -375,15 +340,19 @@ var FoodListPage = /** @class */ (function () {
     // TEMP METHODS TO FIX BROKEN SLIDING ITEM BUG
     FoodListPage.prototype.ionViewWillLeave = function () {
         console.log("view leave");
-        this.slidingList.closeSlidingItems().then(function () {
-            console.log("successfully closed sliding items.");
-        }).catch(function (error) {
-            console.log("Error while closing slidingItems:");
-        });
+        if (this.slidingList) {
+            this.slidingList.closeSlidingItems().then(function () {
+                console.log("successfully closed sliding items.");
+            }).catch(function (error) {
+                console.log("Error while closing slidingItems:");
+            });
+        }
     };
     // TEMP METHOD TO FIX BROKEN SLIDING ITEM BUG
     FoodListPage.prototype.closeSlidingItems = function () {
-        this.slidingList.closeSlidingItems();
+        if (this.slidingList) {
+            this.slidingList.closeSlidingItems();
+        }
     };
     FoodListPage.prototype.ngOnDestroy = function () {
         console.log("view destroyed");
@@ -400,10 +369,10 @@ var FoodListPage = /** @class */ (function () {
             styleUrls: ['./food-list.page.scss'],
         }),
         __metadata("design:paramtypes", [food_service_1.FoodService,
-            auth_guard_1.AuthGuard,
             angular_1.LoadingController,
             angular_1.AlertController,
-            angular_1.ToastController])
+            angular_1.ToastController,
+            router_1.Router])
     ], FoodListPage);
     return FoodListPage;
 }());

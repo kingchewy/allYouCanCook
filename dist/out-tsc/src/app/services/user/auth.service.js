@@ -12,22 +12,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var auth_1 = require("@angular/fire/auth");
 var firebase = require("firebase/app");
+var rxjs_1 = require("rxjs");
 var AuthService = /** @class */ (function () {
     function AuthService(firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
+        this._userId = new rxjs_1.BehaviorSubject(null);
+        this.userId$ = this._userId.asObservable();
         console.log("1. AuthService");
+        var firestore = firebase.firestore();
+        var settings = { timestampsInSnapshots: true };
+        firestore.settings(settings);
+        this.initializeUserId();
     }
-    AuthService.prototype.getUserId = function () {
+    AuthService.prototype.initializeUserId = function () {
+        var _this = this;
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                _this._userId.next(user.uid);
+            }
+        });
     };
-    AuthService.prototype.signupUser = function (email, password) {
+    AuthService.prototype.setUserId = function (userId) {
+        this._userId.next(userId);
+    };
+    /*   get UserId():Observable<string>{
+        return this._userId.asObservable();
+      } */
+    AuthService.prototype.getUserId = function () {
+        return this._userId.getValue();
+    };
+    AuthService.prototype.signupUser = function (newUser, password) {
+        var _this = this;
         return firebase
             .auth()
-            .createUserWithEmailAndPassword(email, password)
+            .createUserWithEmailAndPassword(newUser.email, password)
             .then(function (newUserCredential) {
+            console.log("User successfully created", newUserCredential);
+            _this.setUserId(newUserCredential.user.uid);
             firebase
                 .firestore()
-                .doc("/userProfile/" + newUserCredential.user.uid)
-                .set({ email: email });
+                .doc("/users/" + newUserCredential.user.uid)
+                .set(newUser);
         })
             .catch(function (error) {
             console.error(error);

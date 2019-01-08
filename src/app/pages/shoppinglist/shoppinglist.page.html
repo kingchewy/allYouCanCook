@@ -1,9 +1,66 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>shoppinglist</ion-title>
+  <ion-toolbar class="page-header">
+      <ion-buttons slot="start">
+          <ion-back-button (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+    <ion-title>"{{shoppingList?.title}}"</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="!readonly" class="page-header">
+      <div id="input-content">
+
+        <ion-item class="input-toolbar-border-style" lines="none">
+          <ion-input class="input-header" [(ngModel)]="newShoppingItem" item-content type="text" placeholder="neuer Eintrag" (keyup.enter)=validateAndAddItem()>
+
+            <ion-button fill="clear" size="small" color="light" [disabled]="newShoppingItem.length < 1" (click)="validateAndAddItem()">
+              <ion-icon slot="icon-only" name="add"></ion-icon>
+            </ion-button>
+          </ion-input>
+        </ion-item>
+      </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="page-content">
+
+  <div *ngIf="shoppingList?.itemsUnchecked.length > 0">
+    <ion-list>
+
+      <ion-item lines="none">
+        <ion-label>offen:</ion-label>
+        <ion-button slot="end" fill="outline" size="small" color="light" *ngIf="!reorderedItemsUnsaved && !readonly" (click)="toggleReOrder()">Sortieren</ion-button>
+        <ion-button slot="end" fill="outline" size="small" color="medium" *ngIf="reorderedItemsUnsaved && !readonly" (click)="saveItemsOnReorder()">OK</ion-button>
+      </ion-item>
+      <ion-reorder-group (ionItemReorder)="reorderUncheckedItems($event)" #reorderGroup disabled="true">
+        <ion-reorder *ngFor="let item of shoppingList.itemsUnchecked; let i = index">
+          <ion-item>
+            <ion-checkbox checked="false" [disabled]="readonly" (ionChange)="moveToDone(item, i)"></ion-checkbox>
+            <ion-label>{{item}}</ion-label>
+            <ion-button slot="end" icon-only fill="clear" color="dark" *ngIf="!reorderedItemsUnsaved && !readonly" (click)="deleteUncheckedShoppingItem(item)">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+              </ion-button>
+          </ion-item>
+
+        </ion-reorder>
+      </ion-reorder-group>
+    </ion-list>
+  </div>
+  
+
+  <div *ngIf="shoppingList?.itemsChecked.length > 0">
+      <ion-list>
+        <ion-item lines="none">
+          <ion-label>erledigt:</ion-label>
+        </ion-item>
+         <!-- <ion-reorder-group (ionItemReorder)="reorderCheckedItems($event)" disabled="false"> -->
+          <ion-item *ngFor="let item of shoppingList.itemsChecked; let i = index">
+            <ion-checkbox checked="true" [disabled]="readonly" (ionChange)="moveToUndone(item, i)"></ion-checkbox>
+            <ion-label class="strike">{{item}}</ion-label>
+            <!-- <ion-reorder></ion-reorder> -->
+          </ion-item>
+        <!-- </ion-reorder-group> -->
+      </ion-list>
+    </div>
+
 
 </ion-content>

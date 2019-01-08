@@ -14,30 +14,41 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
-import { AuthService } from './services/user/auth.service';
-import { AuthGuard } from './services/user/auth.guard';
-import { FoodService } from './services/food.service';
-import { FoodCalendarService } from './services/food-calendar.service';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { Firebase } from '@ionic-native/firebase/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase, 'allYouCanCook'), // imports firebase/app needed for everything
-    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireMessagingModule,
+    AngularFireFunctionsModule,
+    AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
+    AngularFirestoreModule.enablePersistence(), // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
     AngularFireStorageModule // imports firebase/storage only needed for storage features
+  ],
+  exports:[  
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    AuthService,
-    AuthGuard,
-    FoodService,
-    FoodCalendarService,
+    Firebase,
+    Camera,
+    LocalNotifications,
+    //ProfileService,
+    //AuthService,
+    //AuthGuard,
+    //FoodService,
+    //FoodCalendarService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
