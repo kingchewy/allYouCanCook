@@ -10,7 +10,7 @@ TECHNOLOGIES:
 
 - Firebase
   - Authentication
-  - Cloud Firestore BEA - NoSQL
+  - Cloud Firestore BETA - NoSQL
   - Storage
   - Cloud Functions
 
